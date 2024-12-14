@@ -13,7 +13,9 @@ local Camera = workspace.CurrentCamera
 
 -- / Local Settings
 local gui = Instance.new("ScreenGui",Player.PlayerGui)
+gui.ResetOnSpawn = false
 local Infos = Instance.new("ScreenGui",Player.PlayerGui)
+Infos.ResetOnSpawn = false
 
 -- / Local Variables
 aimbot = false
