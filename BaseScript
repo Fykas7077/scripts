@@ -20,7 +20,7 @@ Infos.ResetOnSpawn = false
 -- / Local Variables
 aimbot = false
 aimbotTarget = nil
-aimbotAngles = {-7.5,0,0}
+aimbotAngles = {-7,0,0}
 epitaph = 0.1
 espRange = 350
 lastPos = Vector3.zero
