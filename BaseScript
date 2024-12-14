@@ -17,6 +17,8 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 
 -- / Local Variables
 aimbot = false
+aimbotTarget = nil
+aimbotAngles = CFrame.Angles(-math.rad(11.25),0,0)
 epitaph = 0.234
 espRange = 350
 lastPos = Vector3.zero
@@ -257,9 +259,11 @@ end
 local AimbotB = CreateButton("AimLock",UDim2.new(0.9,-50,0.4,-50),50,gui)
 AimbotB.Activated:Connect(function(input)
 	if aimbot then
+		aimbotTarget = nil
 		aimbot = false
 		AimbotB.TextStrokeTransparency = 0.7
 	else
+		aimbotTarget = nil
 		aimbot = true
 		AimbotB.TextStrokeTransparency = 0
 	end
@@ -270,12 +274,15 @@ RunService.PreRender:Connect(function(step)
 	if Character then
 		lastPos = humPart.Position
 		if aimbot then
-			local target = GetClosestToMouse(100)
+			if not aimbotTarget then
+				aimbotTarget = GetClosestToMouse(100)
+			end
+			local target = aimbotTarget
 			if target then
 				local Head,humPart = target:FindFirstChild("Head"), target:FindFirstChild("HumanoidRootPart")
 				if Head and humPart then
 					local point = Head.CFrame+(humPart.Velocity*epitaph)
-					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)
+					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*aimbotAngles
 				end
 			end
 		end
