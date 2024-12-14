@@ -158,7 +158,6 @@ function AddCharm(part,color,transparency)
 		NewCharm(part)
 	end
 end
-local Supports = require(ReplicatedStorage:WaitForChild("Supports"))
 
 function AddInfo(target,name,health,distance)
 	local Target,Humanoid,humPart = GetChar(target)
@@ -191,8 +190,6 @@ function AddInfo(target,name,health,distance)
 	local point = humPart.Position+Vector3.new(0,7,0)
 	if Head then point = Head.Position+Vector3.new(0,3,0) end
 	local poisition,visible = Camera:WorldToScreenPoint(point)
-	--Debris:AddItem(Supports:TestPart(point,1,0,0),1)
-	--Debris:AddItem(CreateButton("Test",UDim2.new(0,poisition.X,0,poisition.Y),10,Infos),0.1)
 	local Text = oldText or Instance.new("TextLabel")
 	Text.Name = "InfoText"
 	Text.BackgroundTransparency = 1
