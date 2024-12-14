@@ -12,6 +12,11 @@ local Mouse = Player:GetMouse()
 local Camera = workspace.CurrentCamera
 
 -- / Local Settings
+local gui = Instance.new("ScreenGui",Player.PlayerGui)
+
+-- / Local Variables
+aimbot = false
+epitaph = 0.234
 
 -- / Functions
 function Raycast(origin,direction,ignores,test) -- 18
@@ -147,22 +152,62 @@ function AddCharm(part,color,transparency)
 	else
 		CharmPart(part)
 	end
-	
 end
 
+function CreateButton(text,pos,size,parent)
+	local Button = Instance.new("TextButton")
+	Button.BackgroundTransparency = 0.7
+	Button.TextStrokeTransparency = 0.7
+	Button.Text = text
+	Button.Position = pos
+	Button.Size = UDim2.new(0,size,0,size)
+	Button.Parent = parent
+	local Corner = Instance.new("UICorner",Button)
+	Corner.CornerRadius = UDim.new(0,size/2)
+	local Stroke = Instance.new("UIStroke",Button)
+	Stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+	Stroke.LineJoinMode = Enum.LineJoinMode.Round
+	Stroke.Thickness = 3
+	Stroke.Transparency = 0.3
+	
+	print(Button)
+	return Button
+end
+
+local AimbotB = CreateButton("AimLock",UDim2.new(0.9,-50,0.4,-50),50,gui)
+AimbotB.Activated:Connect(function(input)
+	if aimbot then
+		aimbot = false
+	else
+		aimbot = true
+	end
+end)
+
 RunService.PreRender:Connect(function(step)
-	Camera.FieldOfView = 90
-	Player.CameraMinZoomDistance = 0.5
-	Player.CameraMaxZoomDistance = 50
-	Player.CameraMode = Enum.CameraMode.Classic
+	local Character,Humanoid,humPart = GetChar(Player,true)
+	
+	if aimbot and Character then
+		local target = GetClosestToMouse(100)
+		print(target)
+		if target then
+			local Head,humPart = target:FindFirstChild("Head"), target:FindFirstChild("HumanoidRootPart")
+			print(Head,humPart)
+			if Head and humPart then
+				local point = Head.CFrame+(humPart.Velocity*epitaph)
+				Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)
+			end
+		end
+	end
 	
 	local chars = GetAllChars()
 	for _,char in pairs(chars) do
-		local player = Players:GetPlayerFromCharacter(char)
-		if player then
-			AddCharm(char,Color3.fromRGB(0,0,255))
-		else
-			AddCharm(char,Color3.fromRGB(255,0,0))
+		if char.Name ~= Player.Name then
+			local player = Players:GetPlayerFromCharacter(char)
+			if player then
+				AddCharm(char,Color3.fromRGB(0,0,255))
+			else
+				AddCharm(char,Color3.fromRGB(255,0,0))
+			end
 		end
 	end
 end)
