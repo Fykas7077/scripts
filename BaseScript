@@ -155,7 +155,7 @@ function AddCharm(part,color,transparency)
 	if part:IsA("Model") then
 		for _,v in pairs(part:GetChildren()) do
 			if v:IsA("BasePart") then
-				if v.Name == "Head" then
+				if v.Name == "Head" and color ~= Color3.fromRGB(0,0,0) then
 					NewCharm(v,Color3.fromRGB(125,0,175))
 				else
 					NewCharm(v,color)
@@ -192,16 +192,16 @@ function AddInfo(target,name,health,distance)
 		end
 	end
 	
-	local text = "/"
+	local text = ""
 	if name then
-		text = text.." Name: "..Target.Name.." /"
+		text = text.."Name: "..Target.Name
 	end
 	if health then
-		text = text.." Health: "..Humanoid.Health.." /"
+		text = text.."/Health: "..Humanoid.Health
 	end
 	if distance then
 		local dist = (humPart.Position-lastPos).Magnitude
-		text = text.." Dist: "..dist.." /"
+		text = text.."/Dist: "..dist
 	end
 	
 	local point = humPart.Position+Vector3.new(0,7,0)
@@ -278,18 +278,17 @@ RunService.PreRender:Connect(function(step)
 			if not aimbotTarget then
 				aimbotTarget = GetClosestToMouse(100)
 			end
-			local target = aimbotTarget
+			local target,_,humPart = GetChar(aimbotTarget,true)
 			if target then
-				local humPart = target:FindFirstChild("HumanoidRootPart")
-				if humPart then
-					local targetPart = humPart
-					local Head = target:FindFirstChild("Head")
-					if Head then
-						targetPart = Head
-					end
-					local point = targetPart.CFrame+(humPart.Velocity*epitaph)
-					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(aimbotAngles[1]),math.rad(aimbotAngles[2]),math.rad(aimbotAngles[3]))
+				local targetPart = humPart
+				local Head = target:FindFirstChild("Head")
+				if Head then
+					targetPart = Head
 				end
+				local point = targetPart.CFrame+(humPart.Velocity*epitaph)
+				Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(aimbotAngles[1]),math.rad(aimbotAngles[2]),math.rad(aimbotAngles[3]))
+			else
+				aimbotTarget = nil
 			end
 		end
 	end
@@ -304,12 +303,17 @@ RunService.PreRender:Connect(function(step)
 				local player = Players:GetPlayerFromCharacter(char)
 				local color = Color3.fromRGB(255,255,255)
 				local info = nil
-				if player then
-					color = Color3.fromRGB(0,0,255)
-					info = {true,true,false}
+				if GetChar(char,true) then
+					if player then
+						color = Color3.fromRGB(0,0,255)
+						info = {true,true,false}
+					else
+						color = Color3.fromRGB(255,0,0)
+						info = {true,true,false}
+					end
 				else
-					color = Color3.fromRGB(255,0,0)
-					info = {true,true,false}
+					color = Color3.fromRGB(0,0,0)
+					info = {false,false,false}
 				end
 
 				spawn(function()
