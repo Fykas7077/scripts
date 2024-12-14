@@ -18,6 +18,7 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 -- / Local Variables
 aimbot = false
 epitaph = 0.234
+espRange = 350
 lastPos = Vector3.zero
 
 -- / Functions
@@ -119,11 +120,14 @@ function GetClosestToMouse(range,onlyPlayer)
 	for _,char in pairs(chars) do
 		if char.Name ~= Player.Name then
 			local humPart = char:FindFirstChild("HumanoidRootPart")
-			local screenpoint,visible = Camera:WorldToScreenPoint(humPart.Position)
-			local distance = (Vector2.new(Mouse.X,Mouse.Y)-Vector2.new(screenpoint.X,screenpoint.Y)).Magnitude
-			if visible and distance <= minDist then
-				target = char
-				minDist = distance
+			local dist = (humPart.Position-lastPos).Magnitude
+			if dist <= espRange then
+				local screenpoint,visible = Camera:WorldToScreenPoint(humPart.Position)
+				local distance = (Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.Y/2)-Vector2.new(screenpoint.X,screenpoint.Y)).Magnitude
+				if visible and distance <= minDist then
+					target = char
+					minDist = distance
+				end
 			end
 		end
 	end
@@ -254,8 +258,10 @@ local AimbotB = CreateButton("AimLock",UDim2.new(0.9,-50,0.4,-50),50,gui)
 AimbotB.Activated:Connect(function(input)
 	if aimbot then
 		aimbot = false
+		AimbotB.TextStrokeTransparency = 0.7
 	else
 		aimbot = true
+		AimbotB.TextStrokeTransparency = 0
 	end
 end)
 
@@ -276,7 +282,7 @@ RunService.PreRender:Connect(function(step)
 	end
 	
 	local chars = GetAllChars()
-	local range = 300
+	local range = espRange
 	for _,char in pairs(chars) do
 		if char.Name ~= Player.Name then
 			local _,_,humPart = GetChar(char)
