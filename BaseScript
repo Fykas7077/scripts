@@ -18,7 +18,7 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 -- / Local Variables
 aimbot = false
 aimbotTarget = nil
-aimbotAngles = CFrame.Angles(-math.rad(8.5),0,0)
+aimbotAngles = {7.5,0,0}
 epitaph = 0.234
 espRange = 350
 lastPos = Vector3.zero
@@ -288,7 +288,7 @@ RunService.PreRender:Connect(function(step)
 						targetPart = Head
 					end
 					local point = targetPart.CFrame+(humPart.Velocity*epitaph)
-					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*aimbotAngles
+					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(aimbotAngles[1],aimbotAngles[2],aimbotAngles[3])
 				end
 			end
 		end
