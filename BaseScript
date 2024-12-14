@@ -1,0 +1,78 @@
+local sup = {}
+-- / Roblox Services /
+local Debris = game:GetService("Debris")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+-- / Game Folders /
+local Players  = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+-- / Player /
+local Player = Players.LocalPlayer
+
+-- / Functions
+function sup:Raycast(origin,direction,ignores,test) -- 18
+	local RaycastParam = RaycastParams.new()
+	RaycastParam.IgnoreWater = true
+	RaycastParam.FilterType = Enum.RaycastFilterType.Exclude
+	RaycastParam.FilterDescendantsInstances = ignores or {}
+	
+	local results = game:GetService("Workspace"):Raycast(origin,direction,RaycastParam)
+	
+	return results
+end
+
+function sup:GetChar(send,check) -- 7,3
+	if sup:NilCheck(send) then return end
+	if send:IsA("Player") then
+		send = send.Character
+	end
+	if send then
+		local Humanoid = send:FindFirstChildOfClass("Humanoid") or send.Parent:FindFirstChildOfClass("Humanoid")
+		if Humanoid then
+			local Character = Humanoid.Parent
+			local humPart = Character:FindFirstChild("HumanoidRootPart")
+			local Animator = Humanoid:FindFirstChildOfClass("Animator")
+			if humPart and Animator then
+				local DownedV = Character:FindFirstChild("DownedV")
+				if not check or Humanoid.Health > 0 and (not DownedV or not DownedV.Value) then
+					return Character,Humanoid,humPart,Animator,DownedV
+				end
+			end
+		end
+	end
+end
+
+function sup:GetTool(send,check) -- 7,20
+	local Character = sup:GetChar(send,check)
+	if Character then
+		local Tool = Character:FindFirstChildOfClass("Tool")
+		if Tool then
+			local ItemStats = sup.ItemStats
+			local tStats = nil
+			if ItemStats then
+				tStats = ItemStats[Tool.Name] or ItemStats[Tool.ToolTip]
+			end
+			return Tool,tStats
+		end
+	end
+end
+
+function sup:Destroy(instance) -- 4
+	if not sup:NilCheck(instance) then
+		instance:Destroy()
+	end
+end
+
+function sup:Lerp(min,max,dist) -- 12
+	return min+(max-min)*dist
+end
+
+function sup:NilCheck(instance) -- 14
+	if not instance or typeof(instance) ~= "Instance" or not instance.Parent then
+		return true
+	else
+		return false
+	end
+end
+
+return sup
