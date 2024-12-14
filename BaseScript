@@ -1,5 +1,5 @@
-local sup = {}
 -- / Roblox Services /
+local ContextActionService = game:GetService("ContextActionService")
 local Debris = game:GetService("Debris")
 local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
@@ -8,21 +8,25 @@ local Players  = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 -- / Player /
 local Player = Players.LocalPlayer
+local Mouse = Player:GetMouse()
+local Camera = workspace.CurrentCamera
+
+-- / Local Settings
 
 -- / Functions
-function sup:Raycast(origin,direction,ignores,test) -- 18
+function Raycast(origin,direction,ignores,test) -- 18
 	local RaycastParam = RaycastParams.new()
 	RaycastParam.IgnoreWater = true
 	RaycastParam.FilterType = Enum.RaycastFilterType.Exclude
 	RaycastParam.FilterDescendantsInstances = ignores or {}
-	
+
 	local results = game:GetService("Workspace"):Raycast(origin,direction,RaycastParam)
-	
+
 	return results
 end
 
-function sup:GetChar(send,check) -- 7,3
-	if sup:NilCheck(send) then return end
+function GetChar(send,check) -- 7,3
+	if NilCheck(send) then return end
 	if send:IsA("Player") then
 		send = send.Character
 	end
@@ -33,41 +37,35 @@ function sup:GetChar(send,check) -- 7,3
 			local humPart = Character:FindFirstChild("HumanoidRootPart")
 			local Animator = Humanoid:FindFirstChildOfClass("Animator")
 			if humPart and Animator then
-				local DownedV = Character:FindFirstChild("DownedV")
-				if not check or Humanoid.Health > 0 and (not DownedV or not DownedV.Value) then
-					return Character,Humanoid,humPart,Animator,DownedV
+				if not check or Humanoid.Health > 0 then
+					return Character,Humanoid,humPart,Animator
 				end
 			end
 		end
 	end
 end
 
-function sup:GetTool(send,check) -- 7,20
-	local Character = sup:GetChar(send,check)
+function GetTool(send,check) -- 7,20
+	local Character = GetChar(send,check)
 	if Character then
 		local Tool = Character:FindFirstChildOfClass("Tool")
 		if Tool then
-			local ItemStats = sup.ItemStats
-			local tStats = nil
-			if ItemStats then
-				tStats = ItemStats[Tool.Name] or ItemStats[Tool.ToolTip]
-			end
-			return Tool,tStats
+			return Tool
 		end
 	end
 end
 
-function sup:Destroy(instance) -- 4
-	if not sup:NilCheck(instance) then
+function Destroy(instance) -- 4
+	if not NilCheck(instance) then
 		instance:Destroy()
 	end
 end
 
-function sup:Lerp(min,max,dist) -- 12
+function Lerp(min,max,dist) -- 12
 	return min+(max-min)*dist
 end
 
-function sup:NilCheck(instance) -- 14
+function NilCheck(instance) -- 14
 	if not instance or typeof(instance) ~= "Instance" or not instance.Parent then
 		return true
 	else
@@ -75,4 +73,96 @@ function sup:NilCheck(instance) -- 14
 	end
 end
 
-return sup
+function GetAllChars()
+	local chars = {}
+	local function FindChars(folder)
+		for _,v in pairs(folder:GetChildren()) do
+			local char = GetChar(v)
+			if char and not table.find(chars,char) then
+				table.insert(chars,char)
+			end
+		end
+	end
+	FindChars(workspace)
+	for _,v in pairs(workspace:GetChildren()) do
+		if v:IsA("Folder") then
+			FindChars(v)
+		end
+	end
+	
+	return chars
+end
+
+function GetClosestToMouse(range,onlyPlayer)
+	local target = nil
+	local minDist = range
+	local chars = nil
+	if onlyPlayer then
+		for _,player in pairs(Players:GetPlayers()) do
+			local char = GetChar(Player)
+			if char then
+				table.insert(chars,char)
+			end
+		end
+	else
+		chars = GetAllChars()
+	end
+	if not chars or not next(chars) then return end
+	
+	for _,char in pairs(chars) do
+		if char.Name ~= Player.Name then
+			local humPart = char:FindFirstChild("HumanoidRootPart")
+			local screenpoint,visible = Camera:WorldToScreenPoint(humPart.Position)
+			local distance = (Vector2.new(Mouse.X,Mouse.Y)-Vector2.new(screenpoint.X,screenpoint.Y)).Magnitude
+			if visible and distance <= minDist then
+				target = char
+				minDist = distance
+			end
+		end
+	end
+	
+	return target
+end
+
+function AddCharm(part,color,transparency)
+	if NilCheck(part) then return end
+	local function CharmPart(p)
+		local Charm = p:FindFirstChild("Charm") or Instance.new("BoxHandleAdornment")
+		Charm.Name = "Charm"
+		Charm.Adornee = p
+		Charm.AlwaysOnTop = true
+		Charm.Color3 = color or Color3.fromRGB(255,255,255)
+		Charm.Transparency = transparency or 0.3
+		Charm.Size = p.Size
+		Charm.Visible = true
+		Charm.ZIndex = 1
+		Charm.Parent = p
+	end
+	if part:IsA("Model") then
+		for _,v in pairs(part:GetChildren()) do
+			if v:IsA("BasePart") then
+				CharmPart(v)
+			end
+		end
+	else
+		CharmPart(part)
+	end
+	
+end
+
+RunService.PreRender:Connect(function(step)
+	Camera.FieldOfView = 90
+	Player.CameraMinZoomDistance = 0.5
+	Player.CameraMaxZoomDistance = 50
+	Player.CameraMode = Enum.CameraMode.Classic
+	
+	local chars = GetAllChars()
+	for _,char in pairs(chars) do
+		local player = Players:GetPlayerFromCharacter(char)
+		if player then
+			AddCharm(char,Color3.fromRGB(0,0,255))
+		else
+			AddCharm(char,Color3.fromRGB(255,0,0))
+		end
+	end
+end)
