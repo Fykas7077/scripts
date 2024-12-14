@@ -18,7 +18,7 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 -- / Local Variables
 aimbot = false
 aimbotTarget = nil
-aimbotAngles = CFrame.Angles(-math.rad(9.25),0,0)
+aimbotAngles = CFrame.Angles(-math.rad(9),0,0)
 epitaph = 0.234
 espRange = 350
 lastPos = Vector3.zero
@@ -325,7 +325,7 @@ RunService.PreRender:Connect(function(step)
 	end
 	for _,v in pairs(Infos:GetChildren()) do
 		local MasterV = v:FindFirstChild("MasterV")
-		if not MasterV or not MasterV.Value then
+		if not MasterV or not GetChar(MasterV.Value) then
 			Delete(v)
 		end
 	end
