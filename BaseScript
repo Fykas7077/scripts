@@ -276,7 +276,7 @@ RunService.PreRender:Connect(function(step)
 	end
 	
 	local chars = GetAllChars()
-	local range = 200
+	local range = 350
 	for _,char in pairs(chars) do
 		if char.Name ~= Player.Name then
 			local _,_,humPart = GetChar(char)
@@ -290,7 +290,7 @@ RunService.PreRender:Connect(function(step)
 					info = {true,true,false}
 				else
 					color = Color3.fromRGB(255,0,0)
-					info = {false,true,false}
+					info = {true,true,false}
 				end
 
 				spawn(function()
