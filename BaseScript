@@ -279,9 +279,14 @@ RunService.PreRender:Connect(function(step)
 			end
 			local target = aimbotTarget
 			if target then
-				local Head,humPart = target:FindFirstChild("Head"), target:FindFirstChild("HumanoidRootPart")
-				if Head and humPart then
-					local point = Head.CFrame+(humPart.Velocity*epitaph)
+				local humPart = target:FindFirstChild("HumanoidRootPart")
+				if humPart then
+					local targetPart = humPart
+					local Head = target:FindFirstChild("Head")
+					if Head then
+						targetPart = Head
+					end
+					local point = targetPart.CFrame+(humPart.Velocity*epitaph)
 					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*aimbotAngles
 				end
 			end
