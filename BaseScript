@@ -276,7 +276,7 @@ RunService.PreRender:Connect(function(step)
 	end
 	
 	local chars = GetAllChars()
-	local range = 350
+	local range = 300
 	for _,char in pairs(chars) do
 		if char.Name ~= Player.Name then
 			local _,_,humPart = GetChar(char)
