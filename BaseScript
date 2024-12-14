@@ -22,7 +22,7 @@ aimbotAngles = {-7.5,0,0}
 epitaph = 0.234
 espRange = 350
 lastPos = Vector3.zero
-print(aimbotAngles)
+print(unpack(aimbotAngles))
 
 -- / Functions
 function Raycast(origin,direction,ignores,test) -- 18
