@@ -19,7 +19,7 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 aimbot = false
 aimbotTarget = nil
 aimbotAngles = {-7.5,0,0}
-epitaph = 0.234
+epitaph = 0.1
 espRange = 350
 lastPos = Vector3.zero
 print(unpack(aimbotAngles))
@@ -271,7 +271,7 @@ AimbotB.Activated:Connect(function(input)
 end)
 
 RunService.PreRender:Connect(function(step)
-	local Character,Humanoid,humPart = GetChar(Player,true)
+	local Character,Humanoid,humPart = GetChar(Player)
 	if Character then
 		lastPos = humPart.Position
 		if aimbot then
