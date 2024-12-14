@@ -18,7 +18,7 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 -- / Local Variables
 aimbot = false
 aimbotTarget = nil
-aimbotAngles = CFrame.Angles(-math.rad(10),0,0)
+aimbotAngles = CFrame.Angles(-math.rad(9.25),0,0)
 epitaph = 0.234
 espRange = 350
 lastPos = Vector3.zero
