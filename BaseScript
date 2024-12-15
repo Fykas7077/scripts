@@ -283,7 +283,8 @@ RunService.PreRender:Connect(function(step)
 				_G.aimbotTarget = GetClosestToMouse(100)
 			end
 			local target,_,humPart = GetChar(_G.aimbotTarget,true)
-			if target then
+			local dist = (humPart.Position-lastPos).Magnitude
+			if target and dist <= _G.espRange then
 				local targetPart = humPart
 				local Head = target:FindFirstChild("Head")
 				if Head then
