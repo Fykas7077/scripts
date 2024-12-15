@@ -20,9 +20,9 @@ Infos.ResetOnSpawn = false
 -- / Local Variables
 _G.aimbot = false
 _G.aimbotTarget = nil
-_G.aimbotAngles = {-7,0,0}
-epitaph = 0.1
-espRange = 350
+_G.aimbotAngles = {-6.5,0,0}
+_G.epitaph = 0.17
+_G.espRange = 350
 lastPos = Vector3.zero
 print(unpack(_G.aimbotAngles))
 
@@ -126,7 +126,7 @@ function GetClosestToMouse(range,onlyPlayer)
 		if char.Name ~= Player.Name then
 			local humPart = char:FindFirstChild("HumanoidRootPart")
 			local dist = (humPart.Position-lastPos).Magnitude
-			if dist <= espRange then
+			if dist <= _G.espRange then
 				local screenpoint,visible = Camera:WorldToScreenPoint(humPart.Position)
 				local distance = (Vector2.new(Camera.ViewportSize.X/2,Camera.ViewportSize.Y/2)-Vector2.new(screenpoint.X,screenpoint.Y)).Magnitude
 				if visible and distance <= minDist then
@@ -287,7 +287,7 @@ RunService.PreRender:Connect(function(step)
 				if Head then
 					targetPart = Head
 				end
-				local point = targetPart.CFrame+(humPart.Velocity*epitaph)
+				local point = targetPart.CFrame+(humPart.Velocity*Vector3.new(_G.epitaph,_G.epitaph*0.25,_G.epitaph))
 				Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(_G.aimbotAngles[1]),math.rad(_G.aimbotAngles[2]),math.rad(_G.aimbotAngles[3]))
 			else
 				_G.aimbotTarget = nil
@@ -296,7 +296,7 @@ RunService.PreRender:Connect(function(step)
 	end
 	
 	local chars = GetAllChars()
-	local range = espRange
+	local range = _G.espRange
 	for _,char in pairs(chars) do
 		if char.Name ~= Player.Name then
 			local _,_,humPart = GetChar(char)
@@ -318,12 +318,10 @@ RunService.PreRender:Connect(function(step)
 					info = {false,false,false}
 				end
 
-				spawn(function()
-					AddCharm(char,color,0.7)
-					if info then
-						AddInfo(char,info[1],info[2],info[3])
-					end
-				end)
+				AddCharm(char,color,0.7)
+				if info then
+					AddInfo(char,info[1],info[2],info[3])
+				end
 			else
 				RemoveCharm(char)
 				RemoveInfo(char)
