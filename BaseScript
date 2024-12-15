@@ -261,7 +261,7 @@ function CreateButton(text,pos,size,parent)
 	return Button
 end
 
-local aimbotB = CreateButton("AimLock",UDim2.new(0.75,0,0.55,0),50,gui)
+local aimbotB = CreateButton("AimLock",UDim2.new(0.7,0,0.5,0),50,gui)
 aimbotB.Activated:Connect(function(input)
 	if _G.aimbot then
 		_G.aimbotTarget = nil
@@ -273,7 +273,7 @@ aimbotB.Activated:Connect(function(input)
 		aimbotB.TextStrokeTransparency = 0
 	end
 end)
-local HeightMoveB = CreateButton("HeightMove",UDim2.new(0.7,0,0.45,0),40,gui)
+local HeightMoveB = CreateButton("HeightMove",UDim2.new(0.6,0,0.35,0),40,gui)
 HeightMoveB.Activated:Connect(function(input)
 	if _G.HeightMove then
 		_G.HeightMove = false
