@@ -291,13 +291,13 @@ RunService.PreRender:Connect(function(step)
 		local NewHeight = 1.75
 		if _G.HeightMove then
 			local cHeight = Humanoid.HipHeight
-			if cHeight >= 9.75 then
+			if cHeight >= 7.25 then
 				_G.HeightUp = false
 			elseif cHeight <= 2 then
 				_G.HeightUp = true
 			end
 			if _G.HeightUp then
-				NewHeight = Lerp(cHeight,10,0.2+step*5)
+				NewHeight = Lerp(cHeight,7.5,0.2+step*5)
 			else
 				NewHeight = Lerp(cHeight,1.75,0.2+step*5)
 			end
