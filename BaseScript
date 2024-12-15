@@ -18,13 +18,13 @@ local Infos = Instance.new("ScreenGui",Player.PlayerGui)
 Infos.ResetOnSpawn = false
 
 -- / Local Variables
-aimbot = false
-aimbotTarget = nil
-aimbotAngles = {-7,0,0}
+_G.aimbot = false
+_G.aimbotTarget = nil
+_G.aimbotAngles = {-7,0,0}
 epitaph = 0.1
 espRange = 350
 lastPos = Vector3.zero
-print(unpack(aimbotAngles))
+print(unpack(_G.aimbotAngles))
 
 -- / Functions
 function Raycast(origin,direction,ignores,test) -- 18
@@ -259,16 +259,16 @@ function CreateButton(text,pos,size,parent)
 	return Button
 end
 
-local AimbotB = CreateButton("AimLock",UDim2.new(0.9,-50,0.3,-50),50,gui)
-AimbotB.Activated:Connect(function(input)
-	if aimbot then
-		aimbotTarget = nil
-		aimbot = false
-		AimbotB.TextStrokeTransparency = 0.7
+local aimbotB = CreateButton("AimLock",UDim2.new(0.9,-50,0.3,-50),50,gui)
+aimbotB.Activated:Connect(function(input)
+	if _G.aimbot then
+		_G.aimbotTarget = nil
+		_G.aimbot = false
+		aimbotB.TextStrokeTransparency = 0.7
 	else
-		aimbotTarget = nil
-		aimbot = true
-		AimbotB.TextStrokeTransparency = 0
+		_G.aimbotTarget = nil
+		_G.aimbot = true
+		aimbotB.TextStrokeTransparency = 0
 	end
 end)
 
@@ -276,11 +276,11 @@ RunService.PreRender:Connect(function(step)
 	local Character,Humanoid,humPart = GetChar(Player)
 	if Character then
 		lastPos = humPart.Position
-		if aimbot then
-			if not aimbotTarget then
-				aimbotTarget = GetClosestToMouse(100)
+		if _G.aimbot then
+			if not _G.aimbotTarget then
+				_G.aimbotTarget = GetClosestToMouse(100)
 			end
-			local target,_,humPart = GetChar(aimbotTarget,true)
+			local target,_,humPart = GetChar(_G.aimbotTarget,true)
 			if target then
 				local targetPart = humPart
 				local Head = target:FindFirstChild("Head")
@@ -288,9 +288,9 @@ RunService.PreRender:Connect(function(step)
 					targetPart = Head
 				end
 				local point = targetPart.CFrame+(humPart.Velocity*epitaph)
-				Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(aimbotAngles[1]),math.rad(aimbotAngles[2]),math.rad(aimbotAngles[3]))
+				Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(_G.aimbotAngles[1]),math.rad(_G.aimbotAngles[2]),math.rad(_G.aimbotAngles[3]))
 			else
-				aimbotTarget = nil
+				_G.aimbotTarget = nil
 			end
 		end
 	end
