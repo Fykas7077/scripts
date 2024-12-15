@@ -20,7 +20,7 @@ Infos.ResetOnSpawn = false
 -- / Local Variables
 _G.aimbot = false
 _G.aimbotTarget = nil
-_G.aimbotAngles = {-6.5,0,0}
+_G.aimbotAngles = {-5,0,0} --{-6.5,0,0}
 _G.epitaph = 0.234
 _G.espRange = 200
 _G.HeightMoving = false
@@ -291,16 +291,17 @@ RunService.PreRender:Connect(function(step)
 		local NewHeight = 1.75
 		if _G.HeightMove then
 			local cHeight = Humanoid.HipHeight
-			if cHeight >= 7.25 then
-				_G.HeightUp = false
-			elseif cHeight <= 2 then
-				_G.HeightUp = true
-			end
-			if _G.HeightUp then
-				NewHeight = Lerp(cHeight,7.5,0.2+step*5)
-			else
-				NewHeight = Lerp(cHeight,1.75,0.2+step*5)
-			end
+			NewHeight = 0.01
+			--if cHeight >= 7.25 then
+			--	_G.HeightUp = false
+			--elseif cHeight <= 2 then
+			--	_G.HeightUp = true
+			--end
+			--if _G.HeightUp then
+			--	NewHeight = Lerp(cHeight,7.5,0.2+step*5)
+			--else
+			--	NewHeight = Lerp(cHeight,1.75,0.2+step*5)
+			--end
 		end
 		Humanoid.HipHeight = NewHeight
 		if _G.aimbot then
