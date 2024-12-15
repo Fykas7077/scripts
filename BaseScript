@@ -102,7 +102,7 @@ function GetAllChars(live)
 			FindChars(v)
 		end
 	end
-	
+
 	return chars
 end
 
@@ -121,7 +121,7 @@ function GetClosestToMouse(range,onlyPlayer)
 		chars = GetAllChars(true)
 	end
 	if not chars or not next(chars) then return end
-	
+
 	for _,char in pairs(chars) do
 		if char.Name ~= Player.Name then
 			local humPart = char:FindFirstChild("HumanoidRootPart")
@@ -136,7 +136,7 @@ function GetClosestToMouse(range,onlyPlayer)
 			end
 		end
 	end
-	
+
 	return target
 end
 
@@ -185,7 +185,7 @@ function AddInfo(target,name,health,distance)
 	local Target,Humanoid,humPart = GetChar(target)
 	if not Target then return end
 	local Head = Target:FindFirstChild("Head")
-	
+
 	local oldText = nil
 	for _,v in pairs(Infos:GetChildren()) do
 		local MasterV = v:FindFirstChild("MasterV")
@@ -193,7 +193,7 @@ function AddInfo(target,name,health,distance)
 			oldText = v
 		end
 	end
-	
+
 	local text = ""
 	if name then
 		text = text.."Name: "..Target.Name
@@ -205,7 +205,7 @@ function AddInfo(target,name,health,distance)
 		local dist = (humPart.Position-lastPos).Magnitude
 		text = text.."/Dist: "..dist
 	end
-	
+
 	local point = humPart.Position+Vector3.new(0,7,0)
 	if Head then point = Head.Position+Vector3.new(0,3,0) end
 	local poisition,visible = Camera:WorldToScreenPoint(point)
@@ -255,7 +255,7 @@ function CreateButton(text,pos,size,parent)
 	Stroke.LineJoinMode = Enum.LineJoinMode.Round
 	Stroke.Thickness = size/15
 	Stroke.Transparency = 0.3
-	
+
 	return Button
 end
 
@@ -283,21 +283,23 @@ RunService.PreRender:Connect(function(step)
 				_G.aimbotTarget = GetClosestToMouse(100)
 			end
 			local target,_,humPart = GetChar(_G.aimbotTarget,true)
-			local dist = (humPart.Position-lastPos).Magnitude
-			if target and dist <= _G.espRange then
-				local targetPart = humPart
-				local Head = target:FindFirstChild("Head")
-				if Head then
-					targetPart = Head
+			if target then
+				local dist = (humPart.Position-lastPos).Magnitude
+				if dist <= _G.espRange then
+					local targetPart = humPart
+					local Head = target:FindFirstChild("Head")
+					if Head then
+						targetPart = Head
+					end
+					local point = targetPart.CFrame+(humPart.Velocity*Vector3.new(_G.epitaph,_G.epitaph*0.25,_G.epitaph))
+					Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(_G.aimbotAngles[1]),math.rad(_G.aimbotAngles[2]),math.rad(_G.aimbotAngles[3]))
 				end
-				local point = targetPart.CFrame+(humPart.Velocity*Vector3.new(_G.epitaph,_G.epitaph*0.25,_G.epitaph))
-				Camera.CFrame = CFrame.lookAt(Camera.CFrame.Position,point.Position)*CFrame.Angles(math.rad(_G.aimbotAngles[1]),math.rad(_G.aimbotAngles[2]),math.rad(_G.aimbotAngles[3]))
 			else
 				_G.aimbotTarget = nil
 			end
 		end
 	end
-	
+
 	local chars = GetAllChars()
 	local range = _G.espRange
 	for _,char in pairs(chars) do
