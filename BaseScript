@@ -259,7 +259,7 @@ function CreateButton(text,pos,size,parent)
 	return Button
 end
 
-local aimbotB = CreateButton("AimLock",UDim2.new(0.75,-25,0.65,-25),50,gui)
+local aimbotB = CreateButton("AimLock",UDim2.new(0.75,0.625,0),50,gui)
 aimbotB.Activated:Connect(function(input)
 	if _G.aimbot then
 		_G.aimbotTarget = nil
