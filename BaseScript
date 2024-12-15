@@ -21,7 +21,7 @@ Infos.ResetOnSpawn = false
 _G.aimbot = false
 _G.aimbotTarget = nil
 _G.aimbotAngles = {-6.5,0,0}
-_G.epitaph = 0.17
+_G.epitaph = 0.234
 _G.espRange = 200
 lastPos = Vector3.zero
 print(unpack(_G.aimbotAngles))
