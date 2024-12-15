@@ -277,7 +277,7 @@ RunService.PreRender:Connect(function(step)
 	if Character then
 		lastPos = humPart.Position
 		Humanoid.WalkSpeed = 38
-		Humanoid.HipHeight = 0.05
+		Humanoid.HipHeight = 1.5
 		if _G.aimbot then
 			if not _G.aimbotTarget then
 				_G.aimbotTarget = GetClosestToMouse(100)
